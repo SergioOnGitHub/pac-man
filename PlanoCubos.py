@@ -13,6 +13,14 @@ import sys
 sys.path.append('..')
 from Cubo import Cubo
 
+import sys
+sys.path.append('..')
+from Ghost import Ghost
+
+key = ""
+
+ghost = object
+
 screen_width = 800
 screen_height = 800
 #vc para el obser.
@@ -38,8 +46,8 @@ Y_MAX=500
 Z_MIN=-500
 Z_MAX=500
 #Dimension del plano
-DimBoardHor = 420
-DimBoardVer = 465
+DimBoardHor = 419
+DimBoardVer = 464
 
 
 #Variables asociados a los objetos de la clase Cubo
@@ -53,8 +61,39 @@ radius = 300
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "Original_PacMan.bmp"
-filename2 = "mapa.bmp"
+filename1 = r"C:\Users\makreb\OneDrive\Documentos\scol\pacmanglobal\pac-man\Original_PacMan.png"
+filename2 = r"C:\Users\makreb\OneDrive\Documentos\scol\pacmanglobal\pac-man\mapa.bmp"
+
+matriz = [
+    # 1  2   3   4    5   6  7    8  9   10
+    [10, 0,  21, 0,  11, 10, 0,  21, 0,  11],
+    [24, 0,  25, 21, 23, 23, 21, 25, 0,  22],
+    [12, 0,  22, 12, 11, 10, 13, 24, 0,  13],
+    [0,  0,  0,  10, 23, 23, 11, 0,  0,  0],
+    [0,  0,  24, 22, 0,  0,  24, 22, 0,  0],
+    [0,  0,  0,  24, 0,  0,  22, 0,  0,  0],
+    [0,  0,  25, 23, 11, 10, 23, 25, 0,  11],
+    [12, 11, 24, 21, 23, 23, 21, 22, 10, 13],
+    [10, 23, 13, 12, 11, 10, 13, 12, 23, 11],
+    [12, 0,  0,  0,  23, 23, 0,  0,  0,  13]
+]
+
+X1 = [0, 30, 75, 120, 165, 210, 251, 300, 345, 375]
+Z1 = [0, 62, 105, 150, 195, 240, 385, 330, 375, 420]
+
+allCol = [-1] * 375
+index = 0
+for i in range(len(allCol)):
+    if i == X1[index]:
+        allCol[i] = index
+        index += 1
+
+allFil = [-1] * 420
+index = 0
+for i in range(len(allFil)):
+    if i == Z1[index]:
+        allFil[i] = index
+        index += 1
 
 pygame.init()
 
@@ -137,7 +176,9 @@ def Init():
     Texturas(filename2)
     
     for i in range(ncubos):
-        cubos.append(Cubo(DimBoardHor, DimBoardVer, 1.0))
+        cubos.append(Cubo(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
+
+    cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
 
 
 #Se mueve al observador circularmente al rededor del plano XZ a una altura fija (EYE_Y)
@@ -185,7 +226,7 @@ def PlanoTexturizado():
     glEnd()              
     glDisable(GL_TEXTURE_2D)
     
-def display():
+def display(code):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     #Plano()
@@ -196,38 +237,32 @@ def display():
     for obj in cubos:
         #obj.draw()
         obj.drawCube(textures,0)
-        obj.update()
-        
-        
-        
-        
-        
-        
+        keys = pygame.event.get()
+        obj.update(code)
+    """ ghost.drawCube(textures, 0)
+    keys = pygame.event.get()
+    ghost.update(0) """
 
-    
 done = False
 Init()
 while not done:
+    code = ""
     for event in pygame.event.get():
-        #if event.type == pygame.QUIT:
-        #    done = True
+        if event.type == pygame.QUIT:
+           done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                if theta > 359.0:
-                    theta = 0
-                else:
-                    theta += 1.0
-                lookat()
+                code = "r"
             if event.key == pygame.K_LEFT:
-                if theta < 1.0:
-                    theta = 360.0
-                else:
-                    theta += -1.0
-                lookat()
+                code = "l"
+            if event.key == pygame.K_UP:
+                code = "u"
+            if event.key == pygame.K_DOWN:
+                code = "d"
             if event.key == pygame.K_ESCAPE:
                 done = True
 
-    display()
+    display(code)
 
     pygame.display.flip()
     pygame.time.wait(5)

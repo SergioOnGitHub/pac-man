@@ -28,14 +28,14 @@ class Pacman:
         self.DimBoard = dim
         #Se inicializa una posicion aleatoria en el tablero
         self.Position = []
-        self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
+        self.Position.append(0)
         self.Position.append(5.0)
-        self.Position.append(random.randint(-1 * self.DimBoard, self.DimBoard))
+        self.Position.append(0)
         #Se inicializa un vector de direccion aleatorio
         self.Direction = []
-        self.Direction.append(random.random())
+        self.Direction.append(0)
         self.Direction.append(5.0)
-        self.Direction.append(random.random())
+        self.Direction.append(1)
         #Se normaliza el vector de direccion
         m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
         self.Direction[0] /= m
@@ -48,6 +48,10 @@ class Pacman:
     def update(self):
         new_x = self.Position[0] + self.Direction[0]
         new_z = self.Position[2] + self.Direction[2]
+
+        self.Position[0]
+
+
         
         if(abs(new_x) <= self.DimBoard):
             self.Position[0] = new_x
