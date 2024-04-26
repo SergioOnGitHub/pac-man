@@ -1,3 +1,30 @@
+# Algoritmo en pseudocódigo
+# Creamos un plano en el eje xz de dimensiones 420 x 465
+# El plano jugable va de la esquina en px (21, 22) a la ezquina (396, 442)
+# El offset dibujado con líneas rojas es de (20, 21)
+
+# El offset para centrarlo es de (21, 22), con este offset las ezquinas cambian
+# El plano jugable con offset centrado va de la esquina en px (22, 23) a la ezquina (397, 443)
+
+# Utilizamos un cubo para representar a los pacman y a los fantasmas
+# El pac
+# Creamos matriz de control de 10 x 10 que contiene el id de las intersecciones
+# Creamos array para convertir px a columnas o filas
+# Creamos array de ids con sus respectivos caminos posibles
+# Hacemos algoritmo que checa la posición del pacman, la direccion en la que va y checa la posición futura
+# Si la posición futura es una intersección, checar los camino poibles, checar la pulsacion de una tecla
+# Si la tecla pulsada permite una direccion valida cambiar direccion
+# Si la tecla no lo permite seguir direccion, si choca con un borde, no actualizar la posicion
+
+
+# Pac-man
+# Tres Fantasma tontos
+# Fantasma con algoritmo estrella
+
+
+#Ortogonal
+
+
 import pygame
 from pygame.locals import *
 
@@ -45,15 +72,18 @@ Y_MIN=-500
 Y_MAX=500
 Z_MIN=-500
 Z_MAX=500
+
 #Dimension del plano
-DimBoardHor = 419
-DimBoardVer = 464
+DimBoardHor = 420
+DimBoardVer = 465
+
+offsetX = 20
+offsetZ = 21
 
 
 #Variables asociados a los objetos de la clase Cubo
 #cubo = Cubo(DimBoard, 1.0)
 cubos = []
-ncubos = 1
 
 #Variables para el control del observador
 theta = 0.0
@@ -61,9 +91,12 @@ radius = 300
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = r"C:\Users\makreb\OneDrive\Documentos\scol\pacmanglobal\pac-man\Original_PacMan.png"
-filename2 = r"C:\Users\makreb\OneDrive\Documentos\scol\pacmanglobal\pac-man\mapa.bmp"
 
+filename1 = "textures/pacman.bmp"
+filename2 = "textures/red_lines_map.bmp"
+#filename2 = "textures/clean_map.bmp"
+
+# Matriz de tipos de adyacencias
 matriz = [
     # 1  2   3   4    5   6  7    8  9   10
     [10, 0,  21, 0,  11, 10, 0,  21, 0,  11],
@@ -78,9 +111,11 @@ matriz = [
     [12, 0,  0,  0,  23, 23, 0,  0,  0,  13]
 ]
 
+#Arrays con coordenadas de las fila y columnas en px
 X1 = [0, 30, 75, 120, 165, 210, 251, 300, 345, 375]
 Z1 = [0, 62, 105, 150, 195, 240, 385, 330, 375, 420]
 
+#Array con la posición en px de las columnas
 allCol = [-1] * 375
 index = 0
 for i in range(len(allCol)):
@@ -88,12 +123,35 @@ for i in range(len(allCol)):
         allCol[i] = index
         index += 1
 
+#Array con la posición en px de las filas
 allFil = [-1] * 420
 index = 0
 for i in range(len(allFil)):
     if i == Z1[index]:
         allFil[i] = index
         index += 1
+
+
+# Array con la el id a posibles caminos 
+# up 0, 
+# right 1
+# down 2
+# left 3
+
+
+
+interId = {
+    10: [1, 2],
+    11: [2, 3],
+    12: [0, 1],
+    13: [0, 3],
+    21: [1, 2, 3],
+    22: [0, 2, 3],
+    23: [0, 1, 3],
+    24: [0, 1, 2],
+    25: [0, 1, 2, 3]
+}
+    
 
 pygame.init()
 
@@ -140,6 +198,38 @@ def Axis():
     glEnd()
     
     
+    # Pixel Box
+    glColor3f(1,0.0,0.0)
+    glBegin(GL_LINES)
+    glVertex3f(0.0,0.0,0.0)
+    glVertex3f(420.0,0.0,0.0)
+    glEnd()
+    
+    glColor3f(1.0,0.0,0.0)
+    glBegin(GL_LINES)
+    glVertex3f(420.0,0.0,0.0)
+    glVertex3f(420.0,0.0,465.0)
+    glEnd()
+    
+    glColor3f(1.0,0.0,0.0)
+    glBegin(GL_LINES)
+    glVertex3f(420.0,0.0,465.0)
+    glVertex3f(0.0,0.0,465.0)
+    glEnd()
+    
+    glColor3f(1.0,0.0,0.0)
+    glBegin(GL_LINES)
+    glVertex3f(0.0,0.0,465.0)
+    glVertex3f(0.0,0.0,0.0)
+    glEnd()
+    
+    #Columna 396
+    glColor3f(1.0,0.0,0.0)
+    glBegin(GL_LINES)
+    glVertex3f(0.0, 1.0, 442.0)
+    glVertex3f(396.0, 1.0, 442.0)
+    glEnd()
+    
     glLineWidth(1.0)
 
 def Texturas(filepath):
@@ -175,10 +265,10 @@ def Init():
     Texturas(filename1)
     Texturas(filename2)
     
-    for i in range(ncubos):
-        cubos.append(Cubo(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
+    
+    cubos.append(Cubo(DimBoardHor, DimBoardVer, 0.0, X1, Z1, allCol, allFil, matriz, 0.0, 442.0))
 
-    cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
+    #cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
 
 
 #Se mueve al observador circularmente al rededor del plano XZ a una altura fija (EYE_Y)

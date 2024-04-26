@@ -12,23 +12,23 @@ import math
 
 class Cubo:
     
-    def __init__(self, dimHor, dimVer, vel, X1, Z1, allCol, allFil, matriz):
+    def __init__(self, dimHor, dimVer, vel, X1, Z1, allCol, allFil, matriz, ubiX, ubiZ):
         self.DimBoardHor = dimHor
         self.DimBoardVer = dimVer
         #Se inicializa una posicion aleatoria en el tablero
         self.Position = []
-        self.Position.append(0)
-        self.Position.append(5.0)
-        self.Position.append(0)
+        self.Position.append(ubiX)
+        self.Position.append(1.0)
+        self.Position.append(ubiZ)
         #Se inicializa un vector de direccion aleatorio
         self.Direction = []
-        self.Direction.append(0)
-        self.Direction.append(5.0)
         self.Direction.append(1)
-        #Se normaliza el vector de direccion
-        m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
-        self.Direction[0] /= m
-        self.Direction[2] /= m
+        self.Direction.append(0)
+        self.Direction.append(0)
+        # Se normaliza el vector de direccion
+        # m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
+        #self.Direction[0] /= m
+        #self.Direction[2] /= m
         #Se cambia la maginitud del vector direccion
         self.Direction[0] *= vel
         self.Direction[2] *= vel
@@ -75,17 +75,17 @@ class Cubo:
         glEnd()
         
     def drawCube(self, texture, id):
-        size = 1
+        size = 10
         glPushMatrix()
         glTranslatef(self.Position[0], self.Position[1], self.Position[2])
-        glScaled(5,5,5)
+        #glScaled(10,10,10)
         glColor3f(1.0, 1.0, 1.0)
         #Activate textures
         glEnable(GL_TEXTURE_2D)
         
         #top face
         glBindTexture(GL_TEXTURE_2D, texture[id])
-        self.drawFace(-size, size, size, -size, size, -size, size, size, -size, +size, size, size)
+        self.drawFace(-size, 1, -size, -size, 1, size, size, 1, size, size, 1, -size)
         # glBindTexture(GL_TEXTURE_2D, texture[id])
         # self.drawFace(-1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, +1.0, 1.0, 1.0)
         
