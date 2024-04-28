@@ -113,18 +113,18 @@ matriz = [
 
 #Arrays con coordenadas de las fila y columnas en px
 X1 = [0, 30, 75, 120, 165, 210, 251, 300, 345, 375]
-Z1 = [0, 62, 105, 150, 195, 240, 385, 330, 375, 420]
+Z1 = [0, 60, 105, 150, 195, 240, 285, 330, 375, 420]
 
-#Array con la posición en px de las columnas
-allCol = [-1] * 375
+#Array con la posición en px de las columnas, de tamaño 376, de índice 0 a 375
+allCol = [-1] * 376
 index = 0
 for i in range(len(allCol)):
     if i == X1[index]:
         allCol[i] = index
         index += 1
 
-#Array con la posición en px de las filas
-allFil = [-1] * 420
+#Array con la posición en px de las filas, de tamaño 421, de índice 0 a 420
+allFil = [-1] * 421
 index = 0
 for i in range(len(allFil)):
     if i == Z1[index]:
@@ -137,8 +137,6 @@ for i in range(len(allFil)):
 # right 1
 # down 2
 # left 3
-
-
 
 interId = {
     10: [1, 2],
@@ -266,7 +264,7 @@ def Init():
     Texturas(filename2)
     
     
-    cubos.append(Cubo(DimBoardHor, DimBoardVer, 0.0, X1, Z1, allCol, allFil, matriz, 0.0, 442.0))
+    cubos.append(Cubo(DimBoardHor, DimBoardVer, 0.0, X1, Z1, allCol, allFil, matriz, 96.0, 127.0, interId))
 
     #cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
 
@@ -282,21 +280,6 @@ def lookat():
     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
     #glutPostRedisplay()
     
-def Plano():
-    #Se dibuja el plano gris
-    glColor3f(0.3, 0.3, 0.3)
-    glBegin(GL_QUADS)
-    # glVertex3d(-DimBoard, 0, -DimBoard)
-    # glVertex3d(-DimBoard, 0, DimBoard)
-    # glVertex3d(DimBoard, 0, DimBoard)
-    # glVertex3d(DimBoard, 0, -DimBoard)
-    
-    glVertex3d(-DimBoardHor, 0, -DimBoardHor)
-    glVertex3d(-DimBoardHor, 0, DimBoardHor)
-    glVertex3d(DimBoardHor, 0, DimBoardHor)
-    glVertex3d(DimBoardHor, 0, -DimBoardHor)
-    
-    glEnd()   
     
 def PlanoTexturizado():
     #Activate textures
@@ -319,13 +302,9 @@ def PlanoTexturizado():
 def display(code):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
-    #Plano()
     PlanoTexturizado()
-    #Se dibuja cubos
-    #cubo.draw()
-    #cubo.Update()
+
     for obj in cubos:
-        #obj.draw()
         obj.drawCube(textures,0)
         keys = pygame.event.get()
         obj.update(code)
