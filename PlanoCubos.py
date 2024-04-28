@@ -44,11 +44,29 @@ import sys
 sys.path.append('..')
 from Ghost import Ghost
 
+
 key = ""
 
 ghost = object
 
-screen_width = 800
+
+# UBICACION DEL PAC-MAN
+# Esquina (0, 0) superior izquierda
+ubi_x_pac = 21
+ubi_z_pac = 22
+
+# Esquina (3, 3)
+# ubi_x_pac = 141
+# ubi_z_pac = 172
+
+# Esquina (6, 9)
+# ubi_x_pac = 276
+# ubi_z_pac = 397
+velocidad_pac = 0
+
+
+
+screen_width = 750
 screen_height = 800
 #vc para el obser.
 FOVY=60.0
@@ -93,8 +111,8 @@ radius = 300
 textures = []
 
 filename1 = "textures/pacman.bmp"
-filename2 = "textures/red_lines_map.bmp"
-#filename2 = "textures/clean_map.bmp"
+#filename2 = "textures/red_lines_map.bmp"
+filename2 = "textures/clean_map.bmp"
 
 # Matriz de tipos de adyacencias
 matriz = [
@@ -105,14 +123,14 @@ matriz = [
     [0,  0,  0,  10, 23, 23, 11, 0,  0,  0],
     [0,  0,  24, 22, 0,  0,  24, 22, 0,  0],
     [0,  0,  0,  24, 0,  0,  22, 0,  0,  0],
-    [0,  0,  25, 23, 11, 10, 23, 25, 0,  11],
+    [10, 0,  25, 23, 11, 10, 23, 25, 0,  11],
     [12, 11, 24, 21, 23, 23, 21, 22, 10, 13],
     [10, 23, 13, 12, 11, 10, 13, 12, 23, 11],
     [12, 0,  0,  0,  23, 23, 0,  0,  0,  13]
 ]
 
 #Arrays con coordenadas de las fila y columnas en px
-X1 = [0, 30, 75, 120, 165, 210, 251, 300, 345, 375]
+X1 = [0, 30, 75, 120, 165, 210, 255, 300, 345, 375]
 Z1 = [0, 60, 105, 150, 195, 240, 285, 330, 375, 420]
 
 #Array con la posición en px de las columnas, de tamaño 376, de índice 0 a 375
@@ -137,7 +155,6 @@ for i in range(len(allFil)):
 # right 1
 # down 2
 # left 3
-
 interId = {
     10: [1, 2],
     11: [2, 3],
@@ -153,82 +170,6 @@ interId = {
 
 pygame.init()
 
-def Axis():
-    glShadeModel(GL_FLAT)
-    glLineWidth(3.0)
-    #X axis in red
-    glColor3f(0.5,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(X_MIN,0.0,0.0)
-    glVertex3f(0.0,0.0,0.0)
-    glEnd()
-    
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,0.0)
-    glVertex3f(X_MAX,0.0,0.0)
-    glEnd()
-    
-    #Y axis in green
-    glColor3f(0.0,0.5,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,Y_MIN,0.0)
-    glVertex3f(0.0,0,0.0)
-    glEnd()
-    
-    glColor3f(0.0,1.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0,0.0)
-    glVertex3f(0.0,Y_MAX,0.0)
-    glEnd()
-    
-    #Z axis in blue
-    glColor3f(0.0,0.0,0.5)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,Z_MIN)
-    glVertex3f(0.0,0.0,0.0)
-    glEnd()
-    
-    glColor3f(0.0,0.0,1.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,0.0)
-    glVertex3f(0.0,0.0,Z_MAX)
-    glEnd()
-    
-    
-    # Pixel Box
-    glColor3f(1,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,0.0)
-    glVertex3f(420.0,0.0,0.0)
-    glEnd()
-    
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(420.0,0.0,0.0)
-    glVertex3f(420.0,0.0,465.0)
-    glEnd()
-    
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(420.0,0.0,465.0)
-    glVertex3f(0.0,0.0,465.0)
-    glEnd()
-    
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0,0.0,465.0)
-    glVertex3f(0.0,0.0,0.0)
-    glEnd()
-    
-    #Columna 396
-    glColor3f(1.0,0.0,0.0)
-    glBegin(GL_LINES)
-    glVertex3f(0.0, 1.0, 442.0)
-    glVertex3f(396.0, 1.0, 442.0)
-    glEnd()
-    
-    glLineWidth(1.0)
 
 def Texturas(filepath):
     textures.append(glGenTextures(1))
@@ -262,23 +203,12 @@ def Init():
     
     Texturas(filename1)
     Texturas(filename2)
+
+
     
-    
-    cubos.append(Cubo(DimBoardHor, DimBoardVer, 0.0, X1, Z1, allCol, allFil, matriz, 96.0, 127.0, interId))
+    cubos.append(Cubo(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
 
     #cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
-
-
-#Se mueve al observador circularmente al rededor del plano XZ a una altura fija (EYE_Y)
-def lookat():
-    global EYE_X
-    global EYE_Z
-    global radius
-    EYE_X = radius * (math.cos(math.radians(theta)) + math.sin(math.radians(theta)))
-    EYE_Z = radius * (-math.sin(math.radians(theta)) + math.cos(math.radians(theta)))
-    glLoadIdentity()
-    gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
-    #glutPostRedisplay()
     
     
 def PlanoTexturizado():
@@ -301,7 +231,6 @@ def PlanoTexturizado():
     
 def display(code):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    Axis()
     PlanoTexturizado()
 
     for obj in cubos:

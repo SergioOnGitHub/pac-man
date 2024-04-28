@@ -7,15 +7,14 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
 import random
-import math
 
 
 class Cubo:
     
-    def __init__(self, dimHor, dimVer, vel, X1, Y1, allCol, allFil, matriz, ubiX, ubiZ, interId):
+    def __init__(self, ubiX, ubiZ, vel, dimHor, dimVer, allCol, allFil, matriz, interId):
         self.DimBoardHor = dimHor
         self.DimBoardVer = dimVer
-        #Se inicializa una posicion aleatoria en el tablero
+        #Se inicializa una posicion en el tablero
         self.Position = []
         self.Position.append(ubiX)
         self.Position.append(1.0)
@@ -25,10 +24,6 @@ class Cubo:
         self.Direction.append(1)
         self.Direction.append(0)
         self.Direction.append(0)
-        # Se normaliza el vector de direccion
-        # m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
-        #self.Direction[0] /= m
-        #self.Direction[2] /= m
         #Se cambia la maginitud del vector direccion
         self.Direction[0] *= vel
         self.Direction[2] *= vel
@@ -48,74 +43,83 @@ class Cubo:
         # left 3
         offsetX = 21
         offsetZ = 22
+        
+        #DEBUGGING
         print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX])
         print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "\n")
-        #print(self.allCol[int(self.Position[0]) - offsetX])
-        #print(self.allFil[int(self.Position[2]) - offsetZ])
+        print(self.allCol[int(self.Position[0]) - offsetX])
+        print(self.allFil[int(self.Position[2]) - offsetZ])
         
+        
+        # Condición, checa si la posición del Pac-Man es una intersección, 
+        # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
+        # Se le resta el offset respectivo a la posición del pac-man para que coincida con las matrices de control
         if self.allCol[int(self.Position[0]) - offsetX] != -1 and self.allFil[int(self.Position[2]) - offsetZ] != -1:
-            temp = self.matriz[self.allFil[int(self.Position[2]) - offsetZ]][self.allCol[int(self.Position[0]) - offsetX]]
+            id = self.matriz[self.allFil[int(self.Position[2]) - offsetZ]][self.allCol[int(self.Position[0]) - offsetX]]
+            
+            # DEBUGGING
             print(self.allCol[int(self.Position[0]) - offsetX])
             print(self.allFil[int(self.Position[2]) - offsetZ])
-            print("temp", temp, "\n")
-            if temp != 0:
-                temp2 = self.interId[temp]
+            print("id", id, "\n")
+            
+            # Condición que identifica si el pac-man está en una posición de intersección válida
+            if id != 0:
+                temp = self.interId[id]
                 
-                if self.Direction[0] == 0 and self.Direction[2] == 1 and not(2 in temp2):
-                    print("down", self.Direction[0], self.Direction[2] )
+                
+                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección  
+                if self.Direction[0] == 0 and self.Direction[2] == -1 and not(0 in temp):
+                    #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
                     self.Direction[2] = 0
                     self.Direction[0] = 0
 
-                    
-                if self.Direction[0] == 0 and self.Direction[2] == -1 and not(0 in temp2):
-                    print("up", self.Direction[0], self.Direction[2] )
+                elif self.Direction[0] == 1 and self.Direction[2] == 0 and not(1 in temp):
+                    #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
                     self.Direction[2] = 0
                     self.Direction[0] = 0
                     
-                if self.Direction[0] == -1 and self.Direction[2] == 0 and not(3 in temp2):
-                    print("left", self.Direction[0], self.Direction[2] )
+                elif self.Direction[0] == 0 and self.Direction[2] == 1 and not(2 in temp):
+                    #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
                     self.Direction[2] = 0
                     self.Direction[0] = 0
-                    
-                if self.Direction[0] == 1 and self.Direction[2] == 0 and not(1 in temp2):
-                    print("right", self.Direction[0], self.Direction[2] )
+
+                elif self.Direction[0] == -1 and self.Direction[2] == 0 and not(3 in temp):
+                    #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
                     self.Direction[2] = 0
                     self.Direction[0] = 0
                     
                 
-                #if (self.allCol[int(self.Position[2] + 22)] != -1):
-                if keys == "d" and 2 in temp2:
+                # Condiciones para indicar si el pacman se puede mover en la dirección del input
+                if keys == "d" and 2 in temp:
                     self.Direction[0] = 0
                     self.Direction[2] = 1
-                elif keys == "u" and 0 in temp2:
+                elif keys == "u" and 0 in temp:
                     self.Direction[0] = 0
                     self.Direction[2] = -1
-                elif keys == "l" and 3 in temp2:
+                elif keys == "l" and 3 in temp:
                     self.Direction[0] = -1
                     self.Direction[2] = 0
-                elif keys == "r" and 1 in temp2:
+                elif keys == "r" and 1 in temp:
                     self.Direction[0] = 1
                     self.Direction[2] = 0
                 
-        
-        # if position x != -1 and position z != -1 entrar a la matriz checar que id tiene, meterlo al mapa y agarrar la posibles direcciones
-        #
         
         
         new_x = self.Position[0] + self.Direction[0]
         new_z = self.Position[2] + self.Direction[2]
         
-        #375 px de columnas
+        # Condición para detener el pacman cuando llega a un borde del mapa
+        # 375 px de columnas
         if(new_x <= 375 + offsetX and new_x >= offsetX):
             self.Position[0] = new_x
         else:
             self.Direction[0] = 0
-            
         # 420 px de filas
         if(new_z <= 420  + offsetZ and new_z >= offsetZ):
             self.Position[2] = new_z
         else:
             self.Direction[2] = 0
+            
 
 
     def drawFace(self, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4):
