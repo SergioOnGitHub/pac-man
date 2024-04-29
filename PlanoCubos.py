@@ -40,10 +40,10 @@ import sys
 sys.path.append('..')
 from Cubo import Cubo
 
+
 import sys
 sys.path.append('..')
-from Ghost import Ghost
-
+from Ghost_cubo import Ghost_cubo
 
 key = ""
 
@@ -63,6 +63,27 @@ ubi_z_pac = 22
 # ubi_x_pac = 276
 # ubi_z_pac = 397
 velocidad_pac = 0
+
+
+# UBICACION DEL GHOST1
+ubi_x_g1 = 396
+ubi_z_g1 = 22
+velocidad_g1 = 0
+
+# UBICACION DEL GHOST2
+ubi_x_g2 = 21
+ubi_z_g2 = 442
+velocidad_g2 = 0
+
+# UBICACION DEL GHOST3
+ubi_x_g3 = 396
+ubi_z_g3 = 442
+velocidad_g3 = 0
+
+# UBICACION DEL GHOST4
+ubi_x_g4 = 321
+ubi_z_g4 = 217
+velocidad_g4 = 0
 
 
 
@@ -102,6 +123,7 @@ offsetZ = 21
 #Variables asociados a los objetos de la clase Cubo
 #cubo = Cubo(DimBoard, 1.0)
 cubos = []
+ghosts = []
 
 #Variables para el control del observador
 theta = 0.0
@@ -110,9 +132,12 @@ radius = 300
 #Arreglo para el manejo de texturas
 textures = []
 
-filename1 = "textures/pacman.bmp"
+pacman = "textures/Pac8bit.bmp"
 #filename2 = "textures/red_lines_map.bmp"
 filename2 = "textures/clean_map.bmp"
+ghost_red = "textures/Blinky8bit.bmp"
+ghost_pink = "textures/Pinky8bit.bmp"
+ghost_cyan = "textures/Inky8bit.bmp"
 
 # Matriz de tipos de adyacencias
 matriz = [
@@ -201,12 +226,19 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     
-    Texturas(filename1)
+    Texturas(pacman)
     Texturas(filename2)
+    Texturas(ghost_red)
+    Texturas(ghost_pink)
+    Texturas(ghost_cyan)
 
 
     
     cubos.append(Cubo(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghosts.append(Ghost_cubo(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghosts.append(Ghost_cubo(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghosts.append(Ghost_cubo(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    
 
     #cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
     
@@ -237,6 +269,15 @@ def display(code):
         obj.drawCube(textures,0)
         keys = pygame.event.get()
         obj.update(code)
+    
+    i = 2
+    for obj in ghosts:
+        obj.drawCube(textures,i)
+        keys = pygame.event.get()
+        obj.update(code)
+        i += 1
+        
+
     """ ghost.drawCube(textures, 0)
     keys = pygame.event.get()
     ghost.update(0) """
@@ -249,14 +290,14 @@ while not done:
         if event.type == pygame.QUIT:
            done = True
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                code = "r"
-            if event.key == pygame.K_LEFT:
-                code = "l"
             if event.key == pygame.K_UP:
                 code = "u"
+            if event.key == pygame.K_RIGHT:
+                code = "r"
             if event.key == pygame.K_DOWN:
                 code = "d"
+            if event.key == pygame.K_LEFT:
+                code = "l"
             if event.key == pygame.K_ESCAPE:
                 done = True
 

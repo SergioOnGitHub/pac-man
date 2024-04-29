@@ -9,7 +9,7 @@ from OpenGL.GLUT import *
 import random
 
 
-class Cubo:
+class Ghost_cubo:
     
     def __init__(self, ubiX, ubiZ, vel, dimHor, dimVer, allCol, allFil, matriz, interId):
         self.DimBoardHor = dimHor
@@ -45,10 +45,9 @@ class Cubo:
         offsetZ = 22
         
         #DEBUGGING
-        # print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
-        # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
-        # print("\n")
-        
+        print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
+        print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
+        print("\n")
         
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
@@ -57,7 +56,6 @@ class Cubo:
             id = self.matriz[self.allFil[int(self.Position[2]) - offsetZ]][self.allCol[int(self.Position[0]) - offsetX]]
             
             # DEBUGGING
-            # print("ID INTERSECCION")
             # print(self.allCol[int(self.Position[0]) - offsetX])
             # print(self.allFil[int(self.Position[2]) - offsetZ])
             # print("id", id, "\n")
@@ -66,44 +64,49 @@ class Cubo:
             if id != 0:
                 temp = self.interId[id]
                 
+                ran_dir = random.choice(temp)
+                print("ran_dir: ", ran_dir)
+                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección 
                 
-                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección  
-                if self.Direction[0] == 0 and self.Direction[2] == -1 and not(0 in temp):
-                    #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
+                # if self.Direction[0] == 0 and self.Direction[2] == -1:
+                #     #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                #     if(2 in temp):
+                #         temp.remove(2)
+                #     ran_dir = random.choice(temp)
 
-                elif self.Direction[0] == 1 and self.Direction[2] == 0 and not(1 in temp):
-                    #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
+                # elif self.Direction[0] == 1 and self.Direction[2] == 0:
+                #     #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                #     if(3 in temp):
+                #         temp.remove(3)
+                #     ran_dir = random.choice(temp)
                     
-                elif self.Direction[0] == 0 and self.Direction[2] == 1 and not(2 in temp):
-                    #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
+                # elif self.Direction[0] == 0 and self.Direction[2] == 1:
+                #     #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                #     if(0 in temp):
+                #         temp.remove(0)
+                #     ran_dir = random.choice(temp)
 
-                elif self.Direction[0] == -1 and self.Direction[2] == 0 and not(3 in temp):
-                    #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
+                # elif self.Direction[0] == -1 and self.Direction[2] == 0:
+                #     #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                #     if(1 in temp):
+                #         temp.remove(1)
+                #     ran_dir = random.choice(temp)
+                
                     
                 
                 # Condiciones para indicar si el pacman se puede mover en la dirección del input
-                if keys == "u" and 0 in temp:
+                if ran_dir == 0:
                     self.Direction[0] = 0
                     self.Direction[2] = -1
-                elif keys == "r" and 1 in temp:
+                elif ran_dir == 1:
                     self.Direction[0] = 1
                     self.Direction[2] = 0
-                elif keys == "d" and 2 in temp:
+                elif ran_dir == 2:
                     self.Direction[0] = 0
                     self.Direction[2] = 1
-                elif keys == "l" and 3 in temp:
+                elif ran_dir == 3:
                     self.Direction[0] = -1
                     self.Direction[2] = 0
-                
-                
         
         
         new_x = self.Position[0] + self.Direction[0]
