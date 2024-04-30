@@ -6,11 +6,25 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
+
+import os
+import numpy as np
+import pandas as pd
+
 import random
 
+BASE_PATH = os.path.abspath(os.path.dirname(__file__))
+CSV_FILE = os.path.join(BASE_PATH, 'matriz_ceros.csv')
 
-class Cubo:
-    
+matrix = np.array(pd.io.parsers.read_csv(CSV_FILE, header=None)).astype("int")
+
+path = []
+grid = []
+
+
+class Ghost_cubo_inteligente:
     def __init__(self, ubiX, ubiZ, vel, dimHor, dimVer, allCol, allFil, matriz, interId):
         self.DimBoardHor = dimHor
         self.DimBoardVer = dimVer
@@ -28,14 +42,28 @@ class Cubo:
         self.Direction[0] *= vel
         self.Direction[2] *= vel
         
-        self.vel = vel
+        
         self.allCol = allCol
         self.allFil = allFil
         self.matriz = matriz
         self.interId = interId
         
+    def finding(matrix, nstart, nend): 
+        global path
+        global grid
+        grid.cleanup()
+        # 1. create the grid with the nodes 
+        grid = Grid(matrix=matrix)
+        # get start and end point
+        start = grid.node(nstart[0], nstart[1])
+        end = grid.node(nend[0], nend[1])
+        # create a finder with A* algorithm
+        finder = AStarFinder()
+        # returns a list with the path and the amount of times the finder had to run to get the path 
+        path, runs = finder.find_path(start, end, grid)
 
-    def update(self, keys):
+
+    def update(self, keys, posPacX, posPacZ):
         
         # up 0, 
         # right 1
@@ -49,7 +77,6 @@ class Cubo:
         # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
         # print("\n")
         
-        
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
         # Se le resta el offset respectivo a la posición del pac-man para que coincida con las matrices de control
@@ -57,71 +84,20 @@ class Cubo:
             id = self.matriz[self.allFil[int(self.Position[2]) - offsetZ]][self.allCol[int(self.Position[0]) - offsetX]]
             
             # DEBUGGING
-            # print("ID INTERSECCION")
             # print(self.allCol[int(self.Position[0]) - offsetX])
             # print(self.allFil[int(self.Position[2]) - offsetZ])
             # print("id", id, "\n")
             
             # Condición que identifica si el pac-man está en una posición de intersección válida
             if id != 0:
-                temp = self.interId[id]
                 
-                
-                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección  
-                if self.Direction[0] == 0 and self.Direction[2] == -1 and not(0 in temp):
-                    #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
-
-                elif self.Direction[0] == 1 and self.Direction[2] == 0 and not(1 in temp):
-                    #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
-                    
-                elif self.Direction[0] == 0 and self.Direction[2] == 1 and not(2 in temp):
-                    #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
-
-                elif self.Direction[0] == -1 and self.Direction[2] == 0 and not(3 in temp):
-                    #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    self.Direction[2] = 0
-                    self.Direction[0] = 0
-                    
-                
+                self.finding(matrix, (self.Position[0], self.Position[2]), (posPacX, posPacZ))
+                xdir = path[1].x - path[0].x
+                zdir = path[1].z - path[0].z
                 # Condiciones para indicar si el pacman se puede mover en la dirección del input
-                if keys == "u" and 0 in temp:
-                    self.Direction[0] = 0
-                    self.Direction[2] = -1
-                elif keys == "r" and 1 in temp:
-                    self.Direction[0] = 1
-                    self.Direction[2] = 0
-                elif keys == "d" and 2 in temp:
-                    self.Direction[0] = 0
-                    self.Direction[2] = 1
-                elif keys == "l" and 3 in temp:
-                    self.Direction[0] = -1
-                    self.Direction[2] = 0
-                    
-                    
-            else:
-                if self.Direction[0] == 0 and (self.Direction[2] == -1 or self.Direction[2] == 1):
-                    if keys == "u":
-                        self.Direction[0] = 0
-                        self.Direction[2] = -1
-                    elif keys == "d":
-                        self.Direction[0] = 0
-                        self.Direction[2] = 1
-                        
-                if self.Direction[2] == 0 and (self.Direction[0] == -1 or self.Direction[0] == 1):
-                    if keys == "r":
-                        self.Direction[0] = 1
-                        self.Direction[2] = 0
-                    elif keys == "l":
-                        self.Direction[0] = -1
-                        self.Direction[2] = 0
-                
-    
+                self.Direction[0] = xdir
+                self.Direction[2] = zdir
+
         
         
         new_x = self.Position[0] + self.Direction[0]
@@ -171,8 +147,5 @@ class Cubo:
         glDisable(GL_TEXTURE_2D)
         glPopMatrix()
         
-    def positionPacmanX(self):
-        return self.Position[0]
-    
-    def positionPacmanZ(self):
-        return self.Position[2]
+        
+        

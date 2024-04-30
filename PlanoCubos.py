@@ -45,6 +45,10 @@ import sys
 sys.path.append('..')
 from Ghost_cubo import Ghost_cubo
 
+import sys
+sys.path.append('..')
+from Ghost_cubo_inteligente import Ghost_cubo_inteligente
+
 key = ""
 
 ghost = object
@@ -124,6 +128,7 @@ offsetZ = 21
 #cubo = Cubo(DimBoard, 1.0)
 cubos = []
 ghosts = []
+ghost_inteligente = []
 
 #Variables para el control del observador
 theta = 0.0
@@ -138,6 +143,7 @@ filename2 = "textures/clean_map.bmp"
 ghost_red = "textures/Blinky8bit.bmp"
 ghost_pink = "textures/Pinky8bit.bmp"
 ghost_cyan = "textures/Inky8bit.bmp"
+ghost_orange = "textures/Clyde-sue-tim-8bit.bmp"
 
 # Matriz de tipos de adyacencias
 matriz = [
@@ -153,6 +159,24 @@ matriz = [
     [10, 23, 13, 12, 11, 10, 13, 12, 23, 11],
     [12, 0,  0,  0,  23, 23, 0,  0,  0,  13]
 ]
+
+# Array con la el id a posibles caminos 
+# up 0, 
+# right 1
+# down 2
+# left 3
+interId = {
+    10: [1, 2],
+    11: [2, 3],
+    12: [0, 1],
+    13: [0, 3],
+    21: [1, 2, 3],
+    22: [0, 2, 3],
+    23: [0, 1, 3],
+    24: [0, 1, 2],
+    25: [0, 1, 2, 3]
+}
+
 
 #Arrays con coordenadas de las fila y columnas en px
 X1 = [0, 30, 75, 120, 165, 210, 255, 300, 345, 375]
@@ -175,22 +199,7 @@ for i in range(len(allFil)):
         index += 1
 
 
-# Array con la el id a posibles caminos 
-# up 0, 
-# right 1
-# down 2
-# left 3
-interId = {
-    10: [1, 2],
-    11: [2, 3],
-    12: [0, 1],
-    13: [0, 3],
-    21: [1, 2, 3],
-    22: [0, 2, 3],
-    23: [0, 1, 3],
-    24: [0, 1, 2],
-    25: [0, 1, 2, 3]
-}
+
     
 
 pygame.init()
@@ -231,6 +240,7 @@ def Init():
     Texturas(ghost_red)
     Texturas(ghost_pink)
     Texturas(ghost_cyan)
+    Texturas(ghost_orange)
 
 
     
@@ -238,9 +248,8 @@ def Init():
     ghosts.append(Ghost_cubo(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    
+    #ghost_inteligente.append(Ghost_cubo_inteligente(ubi_x_g4, ubi_z_g4, velocidad_g4, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
 
-    #cubos.append(Ghost(DimBoardHor, DimBoardVer, 1.0, X1, Z1, allCol, allFil, matriz))
     
     
 def PlanoTexturizado():
@@ -264,11 +273,14 @@ def PlanoTexturizado():
 def display(code):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     PlanoTexturizado()
-
+    posX = 0
+    posZ = 0
     for obj in cubos:
         obj.drawCube(textures,0)
         keys = pygame.event.get()
         obj.update(code)
+        posX = obj.positionPacmanX()
+        posZ = obj.positionPacmanZ()
     
     i = 2
     for obj in ghosts:
@@ -277,15 +289,20 @@ def display(code):
         obj.update(code)
         i += 1
         
+    # for obj in ghost_inteligente:
+    #     obj.drawCube(textures, 5)
+    #     keys = pygame.event.get()
+    #     obj.update(code, posX, posZ)
+        
 
     """ ghost.drawCube(textures, 0)
     keys = pygame.event.get()
     ghost.update(0) """
 
 done = False
+code = ""
 Init()
 while not done:
-    code = ""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
            done = True
