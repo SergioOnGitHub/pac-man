@@ -54,7 +54,7 @@ for point in path:
     x = point.x
     y = point.y
     print(x," ", y)
-point[0].x
+print(path[0].x)
     
     
     

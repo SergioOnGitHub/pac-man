@@ -19,9 +19,7 @@ BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 CSV_FILE = os.path.join(BASE_PATH, 'matriz_ceros.csv')
 
 matrix = np.array(pd.io.parsers.read_csv(CSV_FILE, header=None)).astype("int")
-
-path = []
-grid = []
+grid = Grid(matrix=matrix)
 
 
 class Ghost_cubo_inteligente:
@@ -48,19 +46,23 @@ class Ghost_cubo_inteligente:
         self.matriz = matriz
         self.interId = interId
         
-    def finding(matrix, nstart, nend): 
-        global path
+        self.path = []
+        self.finder = AStarFinder()
+        
+        
+        
+    def finding(self, nstart, nend): 
         global grid
         grid.cleanup()
-        # 1. create the grid with the nodes 
-        grid = Grid(matrix=matrix)
         # get start and end point
         start = grid.node(nstart[0], nstart[1])
         end = grid.node(nend[0], nend[1])
         # create a finder with A* algorithm
-        finder = AStarFinder()
+        
         # returns a list with the path and the amount of times the finder had to run to get the path 
-        path, runs = finder.find_path(start, end, grid)
+        self.path, runs = self.finder.find_path(start, end, grid)
+        
+        
 
 
     def update(self, keys, posPacX, posPacZ):
@@ -73,9 +75,9 @@ class Ghost_cubo_inteligente:
         offsetZ = 22
         
         #DEBUGGING
-        # print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
-        # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
-        # print("\n")
+        print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
+        print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
+        print("\n")
         
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
@@ -86,17 +88,31 @@ class Ghost_cubo_inteligente:
             # DEBUGGING
             # print(self.allCol[int(self.Position[0]) - offsetX])
             # print(self.allFil[int(self.Position[2]) - offsetZ])
-            # print("id", id, "\n")
+            print("id", id, "\n")
             
             # Condición que identifica si el pac-man está en una posición de intersección válida
             if id != 0:
                 
-                self.finding(matrix, (self.Position[0], self.Position[2]), (posPacX, posPacZ))
-                xdir = path[1].x - path[0].x
-                zdir = path[1].z - path[0].z
-                # Condiciones para indicar si el pacman se puede mover en la dirección del input
-                self.Direction[0] = xdir
-                self.Direction[2] = zdir
+                self.finding((self.Position[0] - offsetX, self.Position[2] - offsetZ), (posPacX - offsetX, posPacZ - offsetZ))
+                print(self.path[0].x, self.path[0].y)
+                for i in range(5):
+
+                    print(self.path[i].x, self.path[i].y)
+                    print(self.path[i+1].x, self.path[i+1].y)
+                
+                if self.path[0].x > self.path[1].x:
+                    self.Direction[0] = -1
+                    self.Direction[2] = 0
+                elif self.path[0].x < self.path[1].x:
+                    self.Direction[0] = 1
+                    self.Direction[2] = 0
+                elif self.path[0].y > self.path[1].y:
+                    self.Direction[0] = 0
+                    self.Direction[2] = -1
+                elif self.path[0].y > self.path[1].y:
+                    self.Direction[0] = 0
+                    self.Direction[2] = 1
+
 
         
         

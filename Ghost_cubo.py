@@ -45,9 +45,9 @@ class Ghost_cubo:
         offsetZ = 22
         
         #DEBUGGING
-        print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
-        print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
-        print("\n")
+        # print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
+        # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
+        # print("\n")
         
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
@@ -65,7 +65,7 @@ class Ghost_cubo:
                 temp = self.interId[id]
                 
                 ran_dir = random.choice(temp)
-                print("ran_dir: ", ran_dir)
+                #print("ran_dir: ", ran_dir)
                 # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección 
                 
                 # if self.Direction[0] == 0 and self.Direction[2] == -1:

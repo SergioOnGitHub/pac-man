@@ -248,7 +248,7 @@ def Init():
     ghosts.append(Ghost_cubo(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    #ghost_inteligente.append(Ghost_cubo_inteligente(ubi_x_g4, ubi_z_g4, velocidad_g4, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghost_inteligente.append(Ghost_cubo_inteligente(ubi_x_g4, ubi_z_g4, velocidad_g4, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
 
     
     
@@ -289,10 +289,10 @@ def display(code):
         obj.update(code)
         i += 1
         
-    # for obj in ghost_inteligente:
-    #     obj.drawCube(textures, 5)
-    #     keys = pygame.event.get()
-    #     obj.update(code, posX, posZ)
+    for obj in ghost_inteligente:
+        obj.drawCube(textures, 5)
+        keys = pygame.event.get()
+        obj.update(code, posX, posZ)
         
 
     """ ghost.drawCube(textures, 0)
@@ -321,6 +321,6 @@ while not done:
     display(code)
 
     pygame.display.flip()
-    pygame.time.wait(5)
+    pygame.time.wait(8)
 
 pygame.quit()
