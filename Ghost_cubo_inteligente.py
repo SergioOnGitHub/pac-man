@@ -75,9 +75,9 @@ class Ghost_cubo_inteligente:
         offsetZ = 22
         
         #DEBUGGING
-        print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
-        print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
-        print("\n")
+        # print("x:", self.Position[0], self.allCol[int(self.Position[0]) - offsetX], "offset: ", int(self.Position[0]) - offsetX)
+        # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
+        # print("\n")
         
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
@@ -88,17 +88,14 @@ class Ghost_cubo_inteligente:
             # DEBUGGING
             # print(self.allCol[int(self.Position[0]) - offsetX])
             # print(self.allFil[int(self.Position[2]) - offsetZ])
-            print("id", id, "\n")
+            #print("id", id, "\n")
             
             # Condición que identifica si el pac-man está en una posición de intersección válida
-            if id != 0:
-                
+            if abs(posPacX - self.Position[0]) > 25 or abs(posPacZ - self.Position[2]) > 25:
                 self.finding((self.Position[0] - offsetX, self.Position[2] - offsetZ), (posPacX - offsetX, posPacZ - offsetZ))
-                print(self.path[0].x, self.path[0].y)
-                for i in range(5):
-
-                    print(self.path[i].x, self.path[i].y)
-                    print(self.path[i+1].x, self.path[i+1].y)
+                print("Ghost: ", self.path[0].x, self.path[0].y)
+                print("Ghost_next: ", self.path[1].x, self.path[1].y, "\n")               
+                print("Pac-man: ", posPacX, posPacZ, "\n\n")
                 
                 if self.path[0].x > self.path[1].x:
                     self.Direction[0] = -1
@@ -109,9 +106,14 @@ class Ghost_cubo_inteligente:
                 elif self.path[0].y > self.path[1].y:
                     self.Direction[0] = 0
                     self.Direction[2] = -1
-                elif self.path[0].y > self.path[1].y:
+                elif self.path[0].y < self.path[1].y:
                     self.Direction[0] = 0
                     self.Direction[2] = 1
+                    
+            else:
+                self.Direction[0] = 0
+                self.Direction[2] = 0
+                
 
 
         

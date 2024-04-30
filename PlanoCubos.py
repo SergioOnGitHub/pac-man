@@ -24,6 +24,10 @@
 
 #Ortogonal
 
+# FALTANTES
+# Arreglar el fantasma tonto, lograr que cuando entre en una intersección no regrese en la dirección en que vino
+# Arreglar fantasma inteligente, siempre que entre en una intersección solo pueda moverse en posiciones iguales a cero
+# Arregla
 
 import pygame
 from pygame.locals import *

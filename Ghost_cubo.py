@@ -92,7 +92,6 @@ class Ghost_cubo:
                 #         temp.remove(1)
                 #     ran_dir = random.choice(temp)
                 
-                    
                 
                 # Condiciones para indicar si el pacman se puede mover en la dirección del input
                 if ran_dir == 0:
