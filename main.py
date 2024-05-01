@@ -42,16 +42,16 @@ import math
 # Se carga el archivo de la clase Cubo
 import sys
 sys.path.append('..')
-from Cubo import Cubo
+from Pacman import Pacman
 
 
 import sys
 sys.path.append('..')
-from Ghost_cubo import Ghost_cubo
+from Ghost import Ghost
 
 import sys
 sys.path.append('..')
-from Ghost_cubo_inteligente import Ghost_cubo_inteligente
+from Ghost_inteligente import Ghost_inteligente
 
 
 
@@ -92,9 +92,10 @@ ubi_z_g4 = 217
 velocidad_g4 = 0
 
 
-
+# Tamaño de la pantalla
 screen_width = 750
 screen_height = 800
+
 #vc para el obser.
 FOVY=60.0
 ZNEAR=0.01
@@ -122,13 +123,13 @@ Z_MAX=500
 DimBoardHor = 420
 DimBoardVer = 465
 
+#offset de los posibles caminos del pacman con respecto al punto (0, 0, 0)
 offsetX = 20
 offsetZ = 21
 
 
 #Variables asociados a los objetos de la clase Cubo
-#cubo = Cubo(DimBoard, 1.0)
-ghost = []
+pacman = []
 ghosts = []
 ghost_inteligente = []
 
@@ -139,7 +140,7 @@ radius = 300
 #Arreglo para el manejo de texturas
 textures = []
 
-pacman = "textures/Pac8bit.bmp"
+pacman_text = "textures/Pac8bit.bmp"
 #filename2 = "textures/red_lines_map.bmp"
 filename2 = "textures/clean_map.bmp"
 ghost_red = "textures/Blinky8bit.bmp"
@@ -237,7 +238,7 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
     
-    Texturas(pacman)
+    Texturas(pacman_text)
     Texturas(filename2)
     Texturas(ghost_red)
     Texturas(ghost_pink)
@@ -245,12 +246,15 @@ def Init():
     Texturas(ghost_orange)
 
 
-    
-    ghost.append(Cubo(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    ghosts.append(Ghost_cubo(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    ghosts.append(Ghost_cubo(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    ghosts.append(Ghost_cubo(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
-    ghost_inteligente.append(Ghost_cubo_inteligente(ubi_x_g4, ubi_z_g4, velocidad_g4, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    # Creamos los objetos que representan los elementos del juego
+    # Pacman
+    pacman.append(Pacman(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    # Fantasmas tontos
+    ghosts.append(Ghost(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghosts.append(Ghost(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghosts.append(Ghost(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    #Fantasma inteligente
+    ghost_inteligente.append(Ghost_inteligente(ubi_x_g4, ubi_z_g4, velocidad_g4, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
 
     
     
@@ -277,7 +281,7 @@ def display(code):
     PlanoTexturizado()
     posX = 0
     posZ = 0
-    for obj in ghost:
+    for obj in pacman:
         obj.drawCube(textures,0)
         keys = pygame.event.get()
         obj.update(code)

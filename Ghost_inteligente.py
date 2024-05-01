@@ -22,7 +22,7 @@ matrix = np.array(pd.io.parsers.read_csv(CSV_FILE, header=None)).astype("int")
 grid = Grid(matrix=matrix)
 
 
-class Ghost_cubo_inteligente:
+class Ghost_inteligente:
     def __init__(self, ubiX, ubiZ, vel, dimHor, dimVer, allCol, allFil, matriz, interId):
         self.DimBoardHor = dimHor
         self.DimBoardVer = dimVer

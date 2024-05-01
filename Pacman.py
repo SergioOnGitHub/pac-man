@@ -9,7 +9,7 @@ from OpenGL.GLUT import *
 import random
 
 
-class Ghost_cubo:
+class Pacman:
     
     def __init__(self, ubiX, ubiZ, vel, dimHor, dimVer, allCol, allFil, matriz, interId):
         self.DimBoardHor = dimHor
@@ -28,7 +28,7 @@ class Ghost_cubo:
         self.Direction[0] *= vel
         self.Direction[2] *= vel
         
-        
+        self.vel = vel
         self.allCol = allCol
         self.allFil = allFil
         self.matriz = matriz
@@ -49,6 +49,7 @@ class Ghost_cubo:
         # print("z:", self.Position[2], self.allFil[int(self.Position[2]) - offsetZ], "offset: ", int(self.Position[2]) - offsetZ)
         # print("\n")
         
+        
         # Condición, checa si la posición del Pac-Man es una intersección, 
         # cuando el índice del array de columnas y de filas se encuentra en números diferentes de -1 entra
         # Se le resta el offset respectivo a la posición del pac-man para que coincida con las matrices de control
@@ -56,6 +57,7 @@ class Ghost_cubo:
             id = self.matriz[self.allFil[int(self.Position[2]) - offsetZ]][self.allCol[int(self.Position[0]) - offsetX]]
             
             # DEBUGGING
+            # print("ID INTERSECCION")
             # print(self.allCol[int(self.Position[0]) - offsetX])
             # print(self.allFil[int(self.Position[2]) - offsetZ])
             # print("id", id, "\n")
@@ -64,53 +66,62 @@ class Ghost_cubo:
             if id != 0:
                 temp = self.interId[id]
                 
-                ran_dir = random.choice(temp)
-                #print("ran_dir: ", ran_dir)
-                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección 
-                print("id: ", id)
-                for i in temp:
-                    print("Posibles direcciones: ", i)
-                    
-                if self.Direction[0] == 0 and self.Direction[2] == -1:
-                    print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    ran_dir = random.choice(temp)
-                    while ran_dir == 2:
-                        ran_dir = random.choice(temp)
-
-                elif self.Direction[0] == 1 and self.Direction[2] == 0:
-                    print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    ran_dir = random.choice(temp)
-                    while ran_dir == 3:
-                        ran_dir = random.choice(temp)
-                    
-                    
-                elif self.Direction[0] == 0 and self.Direction[2] == 1:
-                    print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    ran_dir = random.choice(temp)
-                    while ran_dir == 0:
-                        ran_dir = random.choice(temp)
-
-                elif self.Direction[0] == -1 and self.Direction[2] == 0:
-                    print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                    ran_dir = random.choice(temp)
-                    while ran_dir == 1:
-                        ran_dir = random.choice(temp)
                 
+                # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección  
+                if self.Direction[0] == 0 and self.Direction[2] == -1 and not(0 in temp):
+                    #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    self.Direction[2] = 0
+                    self.Direction[0] = 0
+
+                elif self.Direction[0] == 1 and self.Direction[2] == 0 and not(1 in temp):
+                    #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    self.Direction[2] = 0
+                    self.Direction[0] = 0
+                    
+                elif self.Direction[0] == 0 and self.Direction[2] == 1 and not(2 in temp):
+                    #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    self.Direction[2] = 0
+                    self.Direction[0] = 0
+
+                elif self.Direction[0] == -1 and self.Direction[2] == 0 and not(3 in temp):
+                    #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    self.Direction[2] = 0
+                    self.Direction[0] = 0
+                    
                 
                 # Condiciones para indicar si el pacman se puede mover en la dirección del input
-                print("ran_dir: ", ran_dir, "\n")
-                if ran_dir == 0:
+                if keys == "u" and 0 in temp:
                     self.Direction[0] = 0
                     self.Direction[2] = -1
-                elif ran_dir == 1:
+                elif keys == "r" and 1 in temp:
                     self.Direction[0] = 1
                     self.Direction[2] = 0
-                elif ran_dir == 2:
+                elif keys == "d" and 2 in temp:
                     self.Direction[0] = 0
                     self.Direction[2] = 1
-                elif ran_dir == 3:
+                elif keys == "l" and 3 in temp:
                     self.Direction[0] = -1
                     self.Direction[2] = 0
+                    
+                    
+            else:
+                if self.Direction[0] == 0 and (self.Direction[2] == -1 or self.Direction[2] == 1):
+                    if keys == "u":
+                        self.Direction[0] = 0
+                        self.Direction[2] = -1
+                    elif keys == "d":
+                        self.Direction[0] = 0
+                        self.Direction[2] = 1
+                        
+                if self.Direction[2] == 0 and (self.Direction[0] == -1 or self.Direction[0] == 1):
+                    if keys == "r":
+                        self.Direction[0] = 1
+                        self.Direction[2] = 0
+                    elif keys == "l":
+                        self.Direction[0] = -1
+                        self.Direction[2] = 0
+                
+    
         
         
         new_x = self.Position[0] + self.Direction[0]
@@ -159,3 +170,9 @@ class Ghost_cubo:
         
         glDisable(GL_TEXTURE_2D)
         glPopMatrix()
+        
+    def positionPacmanX(self):
+        return self.Position[0]
+    
+    def positionPacmanZ(self):
+        return self.Position[2]
