@@ -67,33 +67,38 @@ class Ghost_cubo:
                 ran_dir = random.choice(temp)
                 #print("ran_dir: ", ran_dir)
                 # Conjunto de condiciones que verifican que el pac-man puede continuar su camino al entrar en una intersección 
-                
-                # if self.Direction[0] == 0 and self.Direction[2] == -1:
-                #     #print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                #     if(2 in temp):
-                #         temp.remove(2)
-                #     ran_dir = random.choice(temp)
-
-                # elif self.Direction[0] == 1 and self.Direction[2] == 0:
-                #     #print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                #     if(3 in temp):
-                #         temp.remove(3)
-                #     ran_dir = random.choice(temp)
+                print("id: ", id)
+                for i in temp:
+                    print("Posibles direcciones: ", i)
                     
-                # elif self.Direction[0] == 0 and self.Direction[2] == 1:
-                #     #print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                #     if(0 in temp):
-                #         temp.remove(0)
-                #     ran_dir = random.choice(temp)
+                if self.Direction[0] == 0 and self.Direction[2] == -1:
+                    print("up", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    ran_dir = random.choice(temp)
+                    while ran_dir == 2:
+                        ran_dir = random.choice(temp)
 
-                # elif self.Direction[0] == -1 and self.Direction[2] == 0:
-                #     #print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
-                #     if(1 in temp):
-                #         temp.remove(1)
-                #     ran_dir = random.choice(temp)
+                elif self.Direction[0] == 1 and self.Direction[2] == 0:
+                    print("right", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    ran_dir = random.choice(temp)
+                    while ran_dir == 3:
+                        ran_dir = random.choice(temp)
+                    
+                    
+                elif self.Direction[0] == 0 and self.Direction[2] == 1:
+                    print("down", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    ran_dir = random.choice(temp)
+                    while ran_dir == 0:
+                        ran_dir = random.choice(temp)
+
+                elif self.Direction[0] == -1 and self.Direction[2] == 0:
+                    print("left", self.Direction[0], self.Direction[2] ) #DEBUGGING
+                    ran_dir = random.choice(temp)
+                    while ran_dir == 1:
+                        ran_dir = random.choice(temp)
                 
                 
                 # Condiciones para indicar si el pacman se puede mover en la dirección del input
+                print("ran_dir: ", ran_dir, "\n")
                 if ran_dir == 0:
                     self.Direction[0] = 0
                     self.Direction[2] = -1

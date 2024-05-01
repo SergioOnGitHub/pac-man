@@ -91,7 +91,7 @@ class Ghost_cubo_inteligente:
             #print("id", id, "\n")
             
             # Condición que identifica si el pac-man está en una posición de intersección válida
-            if abs(posPacX - self.Position[0]) > 25 or abs(posPacZ - self.Position[2]) > 25:
+            if abs(posPacX - self.Position[0]) > 28 or abs(posPacZ - self.Position[2]) > 28:
                 self.finding((self.Position[0] - offsetX, self.Position[2] - offsetZ), (posPacX - offsetX, posPacZ - offsetZ))
                 print("Ghost: ", self.path[0].x, self.path[0].y)
                 print("Ghost_next: ", self.path[1].x, self.path[1].y, "\n")               

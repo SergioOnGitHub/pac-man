@@ -53,9 +53,7 @@ import sys
 sys.path.append('..')
 from Ghost_cubo_inteligente import Ghost_cubo_inteligente
 
-key = ""
 
-ghost = object
 
 
 # UBICACION DEL PAC-MAN
@@ -130,7 +128,7 @@ offsetZ = 21
 
 #Variables asociados a los objetos de la clase Cubo
 #cubo = Cubo(DimBoard, 1.0)
-cubos = []
+ghost = []
 ghosts = []
 ghost_inteligente = []
 
@@ -248,7 +246,7 @@ def Init():
 
 
     
-    cubos.append(Cubo(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
+    ghost.append(Cubo(ubi_x_pac, ubi_z_pac, velocidad_pac, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g1, ubi_z_g1, velocidad_g1, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g2, ubi_z_g2, velocidad_g2, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
     ghosts.append(Ghost_cubo(ubi_x_g3, ubi_z_g3, velocidad_g3, DimBoardHor, DimBoardVer, allCol, allFil, matriz, interId))
@@ -279,7 +277,7 @@ def display(code):
     PlanoTexturizado()
     posX = 0
     posZ = 0
-    for obj in cubos:
+    for obj in ghost:
         obj.drawCube(textures,0)
         keys = pygame.event.get()
         obj.update(code)
