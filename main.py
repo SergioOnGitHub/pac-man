@@ -1,33 +1,20 @@
-# Algoritmo en pseudocódigo
-# Creamos un plano en el eje xz de dimensiones 420 x 465
-# El plano jugable va de la esquina en px (21, 22) a la ezquina (396, 442)
-# El offset dibujado con líneas rojas es de (20, 21)
+# OPEN GL PACMAN
 
-# El offset para centrarlo es de (21, 22), con este offset las ezquinas cambian
-# El plano jugable con offset centrado va de la esquina en px (22, 23) a la ezquina (397, 443)
-
-# Utilizamos un cubo para representar a los pacman y a los fantasmas
-# El pac
-# Creamos matriz de control de 10 x 10 que contiene el id de las intersecciones
-# Creamos array para convertir px a columnas o filas
-# Creamos array de ids con sus respectivos caminos posibles
-# Hacemos algoritmo que checa la posición del pacman, la direccion en la que va y checa la posición futura
-# Si la posición futura es una intersección, checar los camino poibles, checar la pulsacion de una tecla
-# Si la tecla pulsada permite una direccion valida cambiar direccion
-# Si la tecla no lo permite seguir direccion, si choca con un borde, no actualizar la posicion
+# Sergio David Pimentel Pérez A01737331
+# José Eduardo Puentes Martínez A01733177
+# Luis Isaias Montes Rico A01737664
+# Manuel Covarrubias Rodríguez A01737781
+# Luis Isaias Montes Rico A01737664
 
 
-# Pac-man
-# Tres Fantasma tontos
-# Fantasma con algoritmo estrella
+# Programa que realiza una implementación de pacman
+# El programa le permite al pacman moverse unicamente 
+# por los caminos correctos
+# Existen tres fantasmas con  movimiento random pero 
+# que no pueden regresar por el lugar que vinieron
 
 
-#Ortogonal
 
-# FALTANTES
-# Arreglar el fantasma tonto, lograr que cuando entre en una intersección no regrese en la dirección en que vino
-# Arreglar fantasma inteligente, siempre que entre en una intersección solo pueda moverse en posiciones iguales a cero
-# Arregla
 
 import pygame
 from pygame.locals import *
@@ -64,7 +51,6 @@ ubi_z_pac = 22
 # Esquina (3, 3)
 # ubi_x_pac = 141
 # ubi_z_pac = 172
-
 # Esquina (6, 9)
 # ubi_x_pac = 276
 # ubi_z_pac = 397
@@ -127,22 +113,16 @@ DimBoardVer = 465
 offsetX = 20
 offsetZ = 21
 
-
 #Variables asociados a los objetos de la clase Cubo
 pacman = []
 ghosts = []
 ghost_inteligente = []
 
-#Variables para el control del observador
-theta = 0.0
-radius = 300
-
 #Arreglo para el manejo de texturas
-
 textures = []
 
 pacman_text = "textures/Pac8bit.bmp"
-#filename2 = "textures/red_lines_map.bmp"
+#map_text = "textures/red_lines_map.bmp"
 map_text = "textures/clean_map.bmp"
 ghost_red = "textures/Blinky8bit.bmp"
 ghost_pink = "textures/Pinky8bit.bmp"
@@ -165,7 +145,7 @@ matriz = [
 ]
 
 # Array con la el id a posibles caminos 
-# up 0, 
+# up 0
 # right 1
 # down 2
 # left 3
@@ -180,7 +160,6 @@ interId = {
     24: [0, 1, 2],
     25: [0, 1, 2, 3]
 }
-
 
 #Arrays con coordenadas de las fila y columnas en px
 X1 = [0, 30, 75, 120, 165, 210, 255, 300, 345, 375]
@@ -202,11 +181,10 @@ for i in range(len(allFil)):
         allFil[i] = index
         index += 1
 
-
-
     
 
 pygame.init()
+
 
 
 def Texturas(filepath):
@@ -277,6 +255,7 @@ def PlanoTexturizado():
     glEnd()              
     glDisable(GL_TEXTURE_2D)
     
+    
 def display(code):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     PlanoTexturizado()
@@ -299,10 +278,6 @@ def display(code):
         obj.drawCube(textures, 5)
         obj.update(code, posX, posZ)
         
-
-    """ ghost.drawCube(textures, 0)
-    keys = pygame.event.get()
-    ghost.update(0) """
 
 done = False
 code = ""
