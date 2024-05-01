@@ -138,11 +138,12 @@ theta = 0.0
 radius = 300
 
 #Arreglo para el manejo de texturas
+
 textures = []
 
 pacman_text = "textures/Pac8bit.bmp"
 #filename2 = "textures/red_lines_map.bmp"
-filename2 = "textures/clean_map.bmp"
+map_text = "textures/clean_map.bmp"
 ghost_red = "textures/Blinky8bit.bmp"
 ghost_pink = "textures/Pinky8bit.bmp"
 ghost_cyan = "textures/Inky8bit.bmp"
@@ -225,7 +226,7 @@ def Texturas(filepath):
 def Init():
     screen = pygame.display.set_mode(
         (screen_width, screen_height), DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("OpenGL: cubos")
+    pygame.display.set_caption("OpenGL: Pac-Man")
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -237,9 +238,9 @@ def Init():
     glClearColor(0,0,0,0)
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-    
+
+    Texturas(map_text)   
     Texturas(pacman_text)
-    Texturas(filename2)
     Texturas(ghost_red)
     Texturas(ghost_pink)
     Texturas(ghost_cyan)
@@ -263,7 +264,7 @@ def PlanoTexturizado():
     glColor3f(1.0,1.0,1.0)
     glEnable(GL_TEXTURE_2D)
     #front face
-    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBindTexture(GL_TEXTURE_2D, textures[0])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
     glVertex3d(0, 0, 0)
@@ -282,22 +283,20 @@ def display(code):
     posX = 0
     posZ = 0
     for obj in pacman:
-        obj.drawCube(textures,0)
-        keys = pygame.event.get()
+        obj.drawCube(textures,1)
         obj.update(code)
         posX = obj.positionPacmanX()
         posZ = obj.positionPacmanZ()
     
+    # Accedemos a la textura correspondiente
     i = 2
     for obj in ghosts:
         obj.drawCube(textures,i)
-        keys = pygame.event.get()
         obj.update(code)
         i += 1
         
     for obj in ghost_inteligente:
         obj.drawCube(textures, 5)
-        keys = pygame.event.get()
         obj.update(code, posX, posZ)
         
 
